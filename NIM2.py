@@ -4,7 +4,8 @@ print()
 stones_total_1 = int(input('Введите количество камней в кучке 1: '))
 stones_total_2 = int(input('Введите количество камней в кучке 2: '))
 print()
-print('Итак, у вас две кучки камней. \nВ кучке 1 -', stones_total_1, '\nВ кучке 2 -', stones_total_2)
+print('Итак, у вас две кучки камней. \nВ кучке 1 -', stones_total_1, '*' * stones_total_1, '\nВ кучке 2 -',
+      stones_total_2, '*' * stones_total_2)
 print()
 stones = 0
 count = 0
@@ -40,7 +41,8 @@ while stones_total_1 != 0 or stones_total_2 != 0:
             stones_total_2 -= stones
         count += 1
     print('Из кучки', stones_number, 'взято камней', stones)
-    print('Осталось: \nв кучке 1 -', stones_total_1, '\nв кучке 2 -', stones_total_2)
+    print('Осталось: \nв кучке 1 -', stones_total_1, '*' * stones_total_1, '\nв кучке 2 -', stones_total_2,
+          '*' * stones_total_2)
     print()
 
 if (-1) ** count < 0:
