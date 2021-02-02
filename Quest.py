@@ -1,16 +1,9 @@
-# Как сделать первый вход, отличающийся от следующих?
-
-# 2. Добавить возможность переиграть каждую комнату.
-
-# 1. Добавить проверки введенных ответов.
-# 1.1. Возможно, написать для этого функцию.
 # 4. Добавить возможность возвращаться в предыдущие комнаты.
 # 5. Добавить расстояние Ливенштейна для ответов.
 # 6. Добавить разные части тела и разное развитие сюжета для саркофага.
 # 7. Поиграть с шрифтами.
 # 8. Добавить музыку
-# 9. Повторы вынести в функции
-
+# - После ошибки добавить возможность переиграть комнату
 
 # import random
 # from typing import List
@@ -25,29 +18,28 @@ def get_choice(n):
             return a
 
 
-def death():
+def death(local_from_room, local_current_room):
     print('Переиграть комнату: да или нет?')
     a = get_choice(['да', 'нет'])
     if a == 'да':
-        return 1
+        return local_from_room, local_current_room
     elif a == 'нет':
-        return 0
+        exit(0)
 
 
 def call_error_handler():
-    # break
-    print('Упс! Что-то сломалось...')
-    death()
+    print('Божечки! Что-то сломалось...')
+    exit(0)
 
 
-def south_side_room1(local_current_room):  # снаружи, перед пирамидой, room 1
+def south_side_room1(local_from_room):  # снаружи, перед пирамидой, room 1
     eligible_rooms = [0, 2, 4]
-    if local_current_room not in eligible_rooms:
+    if local_from_room not in eligible_rooms:
         print(
             'Как вы сюда попали?..'
         )
         call_error_handler()
-    elif local_current_room == 0:
+    elif local_from_room == 0:
         print(
             'Вы стоите около громадной пирамиды. Хотелось бы проникнуть внутрь. Давайте обойдем ее и поищем вход. Куда '
             'пойдете: направо или налево?'
@@ -58,17 +50,15 @@ def south_side_room1(local_current_room):  # снаружи, перед пира
             'Давайте еще обойдем ее и поищем вход. Куда пойдете: направо или налево?'
         )
     a = get_choice(['направо', 'налево'])
-    # global current_room
-    # current_room = 1
     if a == 'налево':
         return 1, 2
     elif a == 'направо':
         return 1, 4
 
 
-def west_side_room2(local_current_room):  # снаружи, слева от пирамиды, room 2
+def west_side_room2(local_from_room):  # снаружи, слева от пирамиды, room 2
     eligible_rooms = [1, 3]
-    if local_current_room not in eligible_rooms:
+    if local_from_room not in eligible_rooms:
         print(
             'Как вы сюда попали?..'
         )
@@ -85,9 +75,9 @@ def west_side_room2(local_current_room):  # снаружи, слева от пи
         return 2, 1
 
 
-def north_side_room3(local_current_room):  # снаружи, сзади пирамиды, room 3
+def north_side_room3(local_from_room):  # снаружи, сзади пирамиды, room 3
     eligible_rooms = [2, 4]
-    if local_current_room not in eligible_rooms:
+    if local_from_room not in eligible_rooms:
         print(
             'Как вы сюда попали?..'
         )
@@ -104,14 +94,14 @@ def north_side_room3(local_current_room):  # снаружи, сзади пира
         return 3, 2
 
 
-def east_side_room4(local_current_room):  # снаружи, справа от пирамиды, room 4
+def east_side_room4(local_from_room):  # снаружи, справа от пирамиды, room 4
     eligible_rooms = [2, 4, 5]
-    if local_current_room not in eligible_rooms:
+    if local_from_room not in eligible_rooms:
         print(
             'Как вы сюда попали?..'
         )
         call_error_handler()
-    elif local_current_room == 5:
+    elif local_from_room == 5:
         print(
             'Каким-то образом вы прошли сквозь каменный завал. Если вы умеете так делать, то вам нет смысла проходить '
             'квест - вы можете в любой момент выбраться из прамиды. Но если хотите, продолжим...'
@@ -130,75 +120,78 @@ def east_side_room4(local_current_room):  # снаружи, справа от п
         return 4, 5
 
 
-def light():
-    print(
-        'У вас с собой рюкзак. Вы припоминаете, что в нем должен быть фонарик. Что вы будете делать: пойду наощупь '
-        'или поищу фонарик?'
-    )
-    a = get_choice(['пойду наощупь', 'поищу фонарик'])
-    if a == 'пойду наощупь':
-        print('Вы свалились с лестницы и сломали шею. Конец.')
-        return 5, 0
-    elif a == 'поищу фонарик':
-        print(
-            'Вы сняли рюкзак, пошарили в нем рукой и нашли фонарик. Луч света осветил все ту же лестницу, конца '
-            'которой не было видно.'
-        )
-        return 5, 1  # подумать
+# def light():
+#     print(
+#         'У вас с собой рюкзак. Вы припоминаете, что в нем должен быть фонарик. Что вы будете делать: пойду наощупь '
+#         'или поищу фонарик?'
+#     )
+#     a = get_choice(['пойду наощупь', 'поищу фонарик'])
+#     if a == 'пойду наощупь':
+#         print('Вы свалились с лестницы и сломали шею. Конец.')
+#         return 0
+#     elif a == 'поищу фонарик':
+#         print(
+#             'Вы сняли рюкзак, пошарили в нем рукой и нашли фонарик. Луч света осветил все ту же лестницу, конца '
+#             'которой не было видно.'
+#         )
+#         return 1
+#
+#
+# def don_t_cry():
+#     print('Вы: пойду вниз или сяду и буду плакать?')
+#     a = get_choice(['пойду вниз', 'сяду и буду плакать'])
+#     if a == 'сяду и буду плакать':
+#         print('Вы умерли от голода и холода. Конец.')
+#         return 0
+#     elif a == 'пойду вниз':
+#         return 1
+#
+#
+# def stairs_up_room5(local_from_room):  # лестница, room 5
+#     eligible_rooms = [4, 6]
+#     if local_from_room not in eligible_rooms:
+#         print(
+#             'Как вы сюда попали?..'
+#         )
+#         call_error_handler()
+#     elif local_from_room == 4:
+#         print(
+#             'Вниз, в темноту, ведет лестница. Вы начали по ней спускаться и вдруг услышали страшный грохот. Вход в '
+#             'пирамиду завалило. Вы остались в полной темноте.'
+#         )
+#         light_found = light()
+#         if light_found == 0:
+#             return death(local_from_room, 5)
+#         cry = don_t_cry()
+#         if cry == 0:
+#             return death(local_from_room, 5)
+#         return 5, 6
+#     elif local_from_room == 6:
+#         print(
+#             'Выход все еще завален. Нужно поискать другой путь. Но вокруг, кроме лестницы вниз, ничего нет...'
+#         )
+#         cry = don_t_cry()
+#         if cry == 0:
+#             return death(local_from_room, 5)
+#         return 5, 6
 
 
-def stairs_up_room5(local_current_room):  # лестница, room 5
-    eligible_rooms = [4, 6]
-    if local_current_room not in eligible_rooms:
-        print(
-            'Как вы сюда попали?..'
-        )
-        call_error_handler()
-    elif local_current_room == 4:
-        print(
-            'Вниз, в темноту, ведет лестница. Вы начали по ней спускаться и вдруг услышали страшный грохот. Вход в '
-            'пирамиду завалило. Вы остались в полной темноте.'
-        )
-        light_found = light()
-
-
-
-
-    # a = input('Вы: пойду вниз или сяду и буду плакать? ')
-    # while a != 'пойду вниз' and a != 'сяду и буду плакать':
-    #     a = input('Нет такого действия. Вы: пойду вниз или сяду и буду плакать? ')
-    # if a == 'сяду и буду плакать':
-    #     ny = input('Вы умерли от голода и холода. Конец. Переиграть комнату: да или нет? ')
-    #     if ny == 'нет':
-    #         exit()
-    #     if ny == 'да':
-    #         continue
-    # elif a == 'пойду вниз':
-    #     break
-
-
-
-
-
-
-
-
-current_room = 0  # начинаем сначала
-room = 1
+from_room = 0  # начинаем сначала
+current_room = 1
 
 while True:
     # if room == 0:  # умер
     #     room
     if current_room == 1:  # снаружи, с южной стороны пирамиды (откуда начинали)
-        current_room, room = south_side_room1(current_room)
-    elif room == 2:  # снаружи, с западной стороны пирамиды
-        current_room, room = west_side_room2(current_room)
-    elif room == 3:  # снаружи, с северной стороны пирамиды
-        current_room, room = north_side_room3(current_room)
-    elif room == 4:  # снаружи, с восточной стороны пирамиды
-        current_room, room = east_side_room4(current_room)
-    elif room == 5:  # лестница
-        current_room, room = stairs_room5(current_room)
+        from_room, current_room = south_side_room1(from_room)
+    elif current_room == 2:  # снаружи, с западной стороны пирамиды
+        from_room, current_room = west_side_room2(from_room)
+    elif current_room == 3:  # снаружи, с северной стороны пирамиды
+        from_room, current_room = north_side_room3(from_room)
+    elif current_room == 4:  # снаружи, с восточной стороны пирамиды
+        from_room, current_room = east_side_room4(from_room)
+    # elif current_room == 5:  # лестница
+    #     from_room, current_room = stairs_up_room5(from_room)
 
 
 # # первая дверь, НИМ1
