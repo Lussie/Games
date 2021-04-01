@@ -1,8 +1,18 @@
+import nimcheck
+
 print('Это игра НИМ с двумя кучками камней. \nИгрок в свой ход берет любое количество камней из любой одной '
       'кучки. \nВыигрывает тот, кто возьмет последний камень')
 print()
 stones_total_1 = int(input('Введите количество камней в кучке 1: '))
+while nimcheck.input(stones_total_1, max = stones_total_1):
+    stones_total_1 = int(input(
+        'Можно вводить только целое положительное число. Введите количество камней в кучке 1: '
+    ))
 stones_total_2 = int(input('Введите количество камней в кучке 2: '))
+while nimcheck.input(stones_total_2, max = stones_total_2):
+    stones_total_2 = int(input(
+        'Можно вводить только целое положительное число. Введите количество камней в кучке 2: '
+    ))
 print()
 print('Итак, у вас две кучки камней. \nВ кучке 1 -', stones_total_1, '*' * stones_total_1, '\nВ кучке 2 -',
       stones_total_2, '*' * stones_total_2)
@@ -30,14 +40,18 @@ while stones_total_1 != 0 or stones_total_2 != 0:
             stones_number = int(input('Не понял. \nИз какой кучки будете брать камни? (1 или 2) '))
         stones = int(input('Сколько камней будете брать? '))
         if stones_number == 1:
-            while stones > stones_total_1:
-                print('В этой кучке нет столько камней. Есть', stones_total_1)
-                stones = int(input('Сколько камней будете брать? '))
+            while nimcheck.input(stones, max = stones_total_1):
+                stones = int(input(
+                    'Количество взятых камней должно быть положительным целым числом не больше {}. '
+                    'Сколько камней будете брать? '.format(stones_total_1)
+                ))
             stones_total_1 -= stones
         else:
-            while stones > stones_total_2:
-                print('В этой кучке нет столько камней. Есть', stones_total_2)
-                stones = int(input('Сколько камней будете брать? '))
+            while nimcheck.input(stones, max=stones_total_2):
+                stones = int(input(
+                    'Количество взятых камней должно быть положительным целым числом не больше {}. '
+                    'Сколько камней будете брать? '.format(stones_total_2)
+                ))
             stones_total_2 -= stones
         count += 1
     print('Из кучки', stones_number, 'взято камней', stones)
