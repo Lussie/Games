@@ -1,7 +1,13 @@
+import nimcheck  # модуль проверки количества камней
+
 print('Это игра НИМ с одной кучкой камней. \nИгрок в свой ход берет из кучки от 1 до 3 камней. \nВыигрывает тот, '
       'кто возьмет последний камень')
 print()
 stones_total = int(input('Введите количество камней в кучке: '))
+while nimcheck.input(stones_total, max = stones_total):
+    stones_total = int(input(
+        'Можно вводить только целое положительное число. Сколько камне будет в кучке? '
+    ))
 print()
 print('Итак, камней у вас в кучке -', stones_total, '*' * stones_total)
 print()
@@ -18,8 +24,11 @@ while stones_total > 0:
     else:
         print('Ваш ход')
         stones = int(input('Сколько камней будете брать? '))
-        while stones < 1 or stones > 3:
-            stones = int(input('Количество взятых камней должно быть от 1 до 3. Сколько камней будете брать? '))
+        while nimcheck.input(stones, max = min(stones_total, 3)):
+            stones = int(input(
+                'Количество взятых камней должно быть положительным целым числом не больше {}. '
+                'Сколько камней будете брать? '.format(min(stones_total, 3))
+            ))
         count += 1
     stones_total -= stones
     print('Из кучки взято камней', stones)
